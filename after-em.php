@@ -2,7 +2,7 @@
 /*
    Plugin Name: AfterEM
    Plugin URI: http://bitbucket.org/gsulibwebmaster/after-em
-   Description: A plugin that extends the Events Manager plugin to allow emails to be sent after an event.
+   Description: This plugin extends Events Manager to allow follow-up emails to be sent after an event.
    Version: 1.0.0
    Author: Georgia State University Library
    Author URI: http://library.gsu.edu/
