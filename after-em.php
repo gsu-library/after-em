@@ -242,6 +242,9 @@ if(!class_exists('AEM')) {
             Sends an email to the registered users for each even that ended yesterday.
       */
       public function sendMail() {
+         // Make sure classes exist.
+         if(!class_exists(EM_Events) || !class_exists(EM_Event)) { return; }
+
          $options = stripslashes_deep(get_option(self::OPTIONS, self::$defaultOptions));
 
          // Is this enabled?
