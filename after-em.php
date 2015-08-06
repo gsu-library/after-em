@@ -3,7 +3,7 @@
    Plugin Name: AfterEM
    Plugin URI: http://bitbucket.org/gsulibwebmaster/after-em
    Description: This plugin extends Events Manager to allow follow-up emails to be sent after an event.
-   Version: 1.0.0
+   Version: 1.0.1
    Author: Georgia State University Library
    Author URI: http://library.gsu.edu/
    License: GPLv3
@@ -48,13 +48,13 @@ if(!class_exists('AEM')) {
 
 
       /*
-         Function: __construc
+         Function: __construct
             The constructor function is used to setup WordPress hooks.
       */
       public function __construct() {
-         register_activation_hook(__FILE__, array(&$this, 'activationHook'));
-         register_deactivation_hook(__FILE__, array(&$this, 'deactivationHook'));
-         register_uninstall_hook(__FILE__, array(&$this, 'uninstallHook'));
+         register_activation_hook(__FILE__, array('AEM', 'activationHook'));
+         register_deactivation_hook(__FILE__, array('AEM', 'deactivationHook'));
+         register_uninstall_hook(__FILE__, array('AEM', 'uninstallHook'));
 
          add_action('admin_init', array(&$this, 'adminInit'));
          add_action('admin_menu', array(&$this, 'addSubmenuItem'), 11); // Lower priority to make sure parent menu has a chance to be loaded first.
@@ -103,7 +103,8 @@ if(!class_exists('AEM')) {
             ***STATIC FUNCTION***
       */
       public static function uninstallHook() {
-         if(!current_user_can('manage_options') || !defined('WP_UNINSTALL_PLUGIN')) {
+         // Do not check WP_UNINSTALL_PLUGIN here, it is only present for uninstall.php files!!!
+         if(!current_user_can('manage_options')) {
             wp_die('You do not have sufficient permissions to access this page.');
          }
 
