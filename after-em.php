@@ -3,7 +3,7 @@
    Plugin Name: AfterEM
    Plugin URI: http://bitbucket.org/gsulibwebmaster/after-em
    Description: This plugin extends Events Manager to allow follow-up emails to be sent after an event.
-   Version: 1.0.1
+   Version: 1.0.2
    Author: Georgia State University Library
    Author URI: http://library.gsu.edu/
    License: GPLv3
@@ -35,6 +35,7 @@ if(!class_exists('AEM')) {
    class AEM {
       const ID = 'AEM';
       const OPTIONS = 'AEM_options';
+      const AUTOLOAD = 'no';
       const PLUGIN_NAME = 'AfterEM';
       const SCHEDULE_TIME = '06:00:00'; // The time at which the scheduler will run.
       private static $defaultOptions = array(
@@ -78,7 +79,7 @@ if(!class_exists('AEM')) {
          }
 
          // Add options to database, no autoload.
-         add_option(self::OPTIONS, self::$defaultOptions, '', 'no');
+         add_option(self::OPTIONS, self::$defaultOptions, '', self::AUTOLOAD);
       }
 
 
@@ -128,15 +129,15 @@ if(!class_exists('AEM')) {
                $options = array();
 
                $options['afterEventEnabled'] = (isset($_POST['afterEventEnabled']) && $_POST['afterEventEnabled'] == 'on') ? true : false;
-               $options['afterEventSubject'] = isset($_POST['afterEventSubject']) ? $_POST['afterEventSubject'] : '';
-               $options['afterEventBody'] = isset($_POST['afterEventBody']) ? $_POST['afterEventBody'] : '';
+               $options['afterEventSubject'] = isset($_POST['afterEventSubject']) ? stripslashes_deep($_POST['afterEventSubject']) : '';
+               $options['afterEventBody'] = isset($_POST['afterEventBody']) ? stripslashes_deep($_POST['afterEventBody']) : '';
 
-               update_option(self::OPTIONS, $options, 'no');
+               update_option(self::OPTIONS, $options, self::AUTOLOAD);
             }
 
             // Send test email if nonce is good.
             if(isset($_POST[self::ID.'_test_email']) && isset($_POST['testEmail']) && isset($_POST[self::ID.'_nonce']) && wp_verify_nonce($_POST[self::ID.'_nonce'], 'sendEmail')) {
-               $options = stripslashes_deep(get_option(self::OPTIONS, self::$defaultOptions));
+               $options = get_option(self::OPTIONS, self::$defaultOptions);
 
                if($to = sanitize_email($_POST['testEmail'])) {
                   wp_mail($to, $options['afterEventSubject'], $options['afterEventBody'], 'Content-type: text/html');
@@ -163,9 +164,7 @@ if(!class_exists('AEM')) {
             HTML for the submenu page.
       */
       public function submenuPage() {
-         // stripslashes_deep must be used. For whatever reason the option value is escaped before inserting it into
-         // the options table but the slashes are not removed upon retrieval.
-         $options = stripslashes_deep(get_option(self::OPTIONS, self::$defaultOptions));
+         $options = get_option(self::OPTIONS, self::$defaultOptions);
          ?>
 
          <div class="wrap">
@@ -205,7 +204,7 @@ if(!class_exists('AEM')) {
                <table class="form-table" cellpadding="0" cellspacing="0">
                   <tr>
                      <td><label for="chk1"><strong>Enabled</strong></label></td>
-                     <td><input id="chk1" type="checkbox" name="afterEventEnabled" <?= ($options['afterEventEnabled']) ? 'checked="checked"' : ''; ?>/></td>
+                     <td><input id="chk1" type="checkbox" name="afterEventEnabled" <?= checked($options['afterEventEnabled']); ?>/></td>
                   </tr>
                   <tr>
                      <td><label for="txt1"><strong>Subject</strong></label></td>
@@ -246,7 +245,7 @@ if(!class_exists('AEM')) {
          // Make sure classes exist.
          if(!class_exists(EM_Events) || !class_exists(EM_Event)) { return; }
 
-         $options = stripslashes_deep(get_option(self::OPTIONS, self::$defaultOptions));
+         $options = get_option(self::OPTIONS, self::$defaultOptions);
 
          // Is this enabled?
          if(!$options['afterEventEnabled']) { return; }
