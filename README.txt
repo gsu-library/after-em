@@ -4,7 +4,7 @@ Donate link: http://library.gsu.edu/giving/
 Tags: Events Manager, afterem, after-em, after events mailer
 Requires at least: 4.0.0
 Tested up to: 4.0.6
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,7 +37,15 @@ This plugin will not work without the [Events Manager plugin](https://wordpress.
 
 == Upgrade Notice ==
 
+= 1.0.2 =
+* Check your email template for extra slashes after running this update!
+
 == Changelog ==
+
+= 1.0.2 =
+* Fixed a problem with stripslashes (check your email template after the update for extra slashes).
+* Used checked().
+* AUTOLOAD constant added.
 
 = 1.0.1 =
 * Fixed the uninstall hook.
