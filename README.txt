@@ -3,7 +3,7 @@ Contributors: mbrooks34
 Donate link: http://library.gsu.edu/giving/
 Tags: Events Manager, afterem, after-em, after events mailer
 Requires at least: 4.0.0
-Tested up to: 4.0.6
+Tested up to: 4.2.4
 Stable tag: 1.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
